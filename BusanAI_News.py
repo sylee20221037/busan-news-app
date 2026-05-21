@@ -197,7 +197,7 @@ def is_duplicate(title, existing_titles):
     return False
 
 # =========================
-# 🧹 날짜 변환 함
+# 🧹 날짜 변환 함수
 # =========================
 def format_pub_date(pub_date):
     dt = datetime.strptime(
@@ -261,8 +261,8 @@ def create_map(district_news):
                 <b>{a['title']}</b>
             </a><br>
             <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
-            <small>{a['summary']}</small><br><br>
-            {similar_html}<br>
+            <small>{a['summary']}</small><br>
+            {similar_html}<br><br>
             """
 
         # 나머지 기사 숨김
@@ -289,8 +289,8 @@ def create_map(district_news):
                     <b>{a['title']}</b>
                 </a><br>
                 <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
-                <small>{a['summary']}</small><br><br>
-                {similar_html}<br>
+                <small>{a['summary']}</small><br>
+                {similar_html}<br><br>
                 """
 
             news_html += "</details>"
