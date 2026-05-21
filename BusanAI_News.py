@@ -128,11 +128,11 @@ def classify(text):
 # =========================
 def sentiment_badge(sentiment):
     if sentiment == "긍정":
-        return '<span style="color:green; font-size:18px;">●</span> 긍정 논조'
+        return '<span style="color:green; font-size:22px;">●</span> 긍정 논조'
     elif sentiment == "부정":
-        return '<span style="color:red; font-size:18px;">●</span> 부정 논조'
+        return '<span style="color:red; font-size:22px;">●</span> 부정 논조'
     else:
-        return '<span style="color:orange; font-size:18px;">●</span> 중립 논조'
+        return '<span style="color:orange; font-size:22px;">●</span> 중립 논조'
 
 # =========================
 # 🗺️ 지도 생성
