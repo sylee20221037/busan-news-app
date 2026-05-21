@@ -174,6 +174,24 @@ def create_map(district_news):
             fill_opacity=0.6
         ).add_to(m)
 
+        folium.map.Marker(
+            [lat, lon],
+            icon=folium.DivIcon(
+                html=f"""
+                <div style="
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: black;
+                    text-align: center;
+                    margin-top: 18px;
+                    white-space: nowrap;
+                ">
+                    {d}
+                </div>
+                """
+                )
+            ).add_to(m)
+
     filename = "busan_news_map.html"
     m.save(filename)
 
