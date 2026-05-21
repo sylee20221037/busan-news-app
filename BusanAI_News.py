@@ -134,9 +134,6 @@ def create_map(district_news):
     for d, articles in district_news.items():
         lat, lon = districts[d]
 
-        combined_text = " ".join([a["title"] for a in articles])
-        color = classify(combined_text)
-
         news_html = ""
         for a in articles[:5]:
             news_html += f"""
@@ -171,9 +168,9 @@ def create_map(district_news):
             location=[lat, lon],
             radius=8 + len(articles),
             popup=folium.Popup(popup_text, max_width=300),
-            color=color,
+            color="blue",
             fill=True,
-            fill_color=color,
+            fill_color="blue",
             fill_opacity=0.6
         ).add_to(m)
 
