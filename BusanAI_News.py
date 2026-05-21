@@ -159,6 +159,34 @@ def save_history(history):
     except Exception as e:
         print("저장 실패:", e)
 
+from difflib import SequenceMatcher
+
+# =========================
+# 🔍 과거 유사 기사 찾기
+# =========================
+def find_similar_articles(title, history):
+    similar = []
+
+    for old in history:
+        score = SequenceMatcher(
+            None,
+            title,
+            old["title"]
+        ).ratio()
+
+        # 70% 이상 비슷하면
+        if score > 0.7 and old["title"] != title:
+            similar.append(old)
+
+    # 최신순 3개만
+    similar = sorted(
+        similar,
+        key=lambda x: x["date"],
+        reverse=True
+    )
+
+    return similar[:3]
+
 # =========================c
 # =========================
 def is_duplicate(title, existing_titles):
@@ -215,12 +243,25 @@ def create_map(district_news):
 
         news_html = ""
         for a in articles[:5]:
+            similar_html = ""
+            if a["similar"]:
+                similar_html += "<details><summary>📚 과거 유사 기사</summary>"
+            
+                for old in a["similar"]:
+                    similar_html += f"""
+                    <small>
+                    {old['date']} - {old['title']}
+                    </small><br>
+                    """
+
+    similar_html += "</details>"
             news_html += f"""
             <a href="{a['link']}" target="_blank">
                 <b>{a['title']}</b>
             </a><br>
             <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
-            <small>{a['summary']}</small><br><br>            
+            <small>{a['summary']}</small><br><br>
+            {similar_html}<br>
             """
 
         # 나머지 기사 숨김
@@ -233,7 +274,8 @@ def create_map(district_news):
                     <b>{a['title']}</b>
                 </a><br>
                 <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
-                <small>{a['summary']}</small><br><br>                
+                <small>{a['summary']}</small><br><br>
+                {similar_html}<br>
                 """
 
             news_html += "</details>"
@@ -399,6 +441,11 @@ try:
             # 감성 분석
             sentiment = ai_sentiment(title, desc)
 
+            similar_articles = find_similar_articles(
+                title,
+                history
+            )
+
             # 저장
             district_news[district].append({
                 "title": title,
@@ -406,7 +453,8 @@ try:
                 "summary": summary,
                 "link": link,
                 "pub_date": pub_date,
-                "sentiment": sentiment
+                "sentiment": sentiment,
+                "similar": similar_articles
             })
 
             history.append({
