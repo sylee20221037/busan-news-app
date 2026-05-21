@@ -161,19 +161,6 @@ def create_map(district_news):
 
             news_html += "</details>"
 
-        if len(articles) > 5:
-            news_html += f"<b>... 외 {len(articles)-5}건 더</b>"
-            if "Access blocked" in a["title"] or "Access blocked" in a["summary"]:
-                continue
-            news_html += f"""
-            <a href="{a['link']}" target="_blank">
-                <b>{a['title']}</b>
-            </a><br>
-            <small>{a['pub_date']}</small><br>
-            <small>감성: {a['sentiment']}</small><br>
-            <small>{a['summary']}</small><br><br>
-            """
-
         popup_text = f"""
         <b>{d} ({len(articles)}건)</b><br><br>
         {news_html}
