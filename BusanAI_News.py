@@ -127,12 +127,12 @@ def create_map(district_news):
 
         news_html = ""
         for a in articles[:5]:
-        news_html += f"""
-        <a href="{a['link']}" target="_blank">
-            <b>{a['title']}</b>
-        </a><br>
-        <small>{a['summary']}</small><br><br>
-        """
+            news_html += f"""
+            <a href="{a['link']}" target="_blank">
+                <b>{a['title']}</b>
+            </a><br>
+            <small>{a['summary']}</small><br><br>
+            """
 
         if len(articles) > 5:
             news_html += f"<b>... 외 {len(articles)-5}건 더</b>"
