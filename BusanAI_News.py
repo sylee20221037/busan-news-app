@@ -8,6 +8,7 @@ import webbrowser
 from openai import OpenAI
 from datetime import datetime
 import streamlit as st
+import json
 
 # =========================
 # 🔑 네이버 API 키
@@ -160,6 +161,23 @@ def create_map(district_news):
     print("✅ 지도 생성 완료!")
 
 # =========================
+# 💾 요약 캐시 불러오기
+# =========================
+def load_summary_cache():
+    try:
+        with open("summary_cache.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        return {}
+
+# =========================
+# 💾 요약 캐시 저장
+# =========================
+def save_summary_cache(cache):
+    with open("summary_cache.json", "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+
+# =========================
 # 🗺️ AI 요약
 # =========================
 client = OpenAI(
@@ -220,6 +238,9 @@ try:
     news = get_news()
     district_news = defaultdict(list)
 
+    # 캐시 불러오기
+    summary_cache = load_summary_cache()
+
     for article in news:
         title = clean_text(article["title"])
         desc = clean_text(article["description"])
@@ -239,7 +260,11 @@ try:
         district = find_district(text)
 
         if district:
-            summary = ai_summarize(title, desc)
+            if title in summary_cache:
+                summary = summary_cache[title]
+            else:
+                summary = ai_summarize(title, desc)
+                summary_cache[title] = summary
             sentiment = ai_sentiment(title, desc)
             district_news[district].append({
                 "title": title,
@@ -250,6 +275,7 @@ try:
                 "sentiment": sentiment
             })
 
+    save_summary_cache(summary_cache)
     create_map(district_news)
 
 except Exception as e:
