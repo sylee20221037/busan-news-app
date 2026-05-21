@@ -302,7 +302,7 @@ def create_map(district_news):
 
         folium.CircleMarker(
             location=[lat, lon],
-            radius=8 + len(articles),
+            radius= 18,
             popup=folium.Popup(popup_text, max_width=300),
             color="blue",
             fill=True,
