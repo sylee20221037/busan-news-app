@@ -10,6 +10,7 @@ from openai import OpenAI
 from datetime import datetime
 import streamlit as st
 import json
+import base64
 
 # =========================
 # 🔑 네이버 API 키
@@ -79,6 +80,84 @@ def find_district(text):
 # =========================
 def clean_text(text):
     return re.sub('<.*?>', '', text)
+
+# =========================
+# 📚 GitHub 기사 히스토리 불러오기
+# =========================
+def load_history():
+    try:
+        token = st.secrets["GITHUB_TOKEN"]
+        repo = st.secrets["GITHUB_REPO"]
+
+        url = f"https://api.github.com/repos/{repo}/contents/news_history.json"
+
+        headers = {
+            "Authorization": f"token {token}"
+        }
+
+        res = requests.get(url, headers=headers)
+
+        if res.status_code == 200:
+            content = res.json()["content"]
+            decoded = base64.b64decode(content).decode("utf-8")
+            return json.loads(decoded)
+
+        return []
+
+    except Exception as e:
+        print("히스토리 로드 실패:", e)
+        return []
+
+
+# =========================
+# 💾 GitHub 기사 히스토리 저장
+# =========================
+def save_history(history):
+    try:
+        token = st.secrets["GITHUB_TOKEN"]
+        repo = st.secrets["GITHUB_REPO"]
+
+        url = f"https://api.github.com/repos/{repo}/contents/news_history.json"
+
+        headers = {
+            "Authorization": f"token {token}"
+        }
+
+        # 기존 파일 sha 확인
+        res = requests.get(url, headers=headers)
+
+        sha = None
+        if res.status_code == 200:
+            sha = res.json()["sha"]
+
+        content = json.dumps(
+            history,
+            ensure_ascii=False,
+            indent=2
+        )
+
+        encoded = base64.b64encode(
+            content.encode("utf-8")
+        ).decode()
+
+        payload = {
+            "message": "update news history",
+            "content": encoded
+        }
+
+        if sha:
+            payload["sha"] = sha
+
+        requests.put(
+            url,
+            headers=headers,
+            json=payload
+        )
+
+        print("✅ GitHub 저장 완료")
+
+    except Exception as e:
+        print("저장 실패:", e)
 
 # =========================c
 # =========================
@@ -274,6 +353,8 @@ def ai_sentiment(title, desc):
 # 🚀 실행
 # =========================
 try:
+    history = load_history()
+    
     news = get_news()
     district_news = defaultdict(list)
 
@@ -328,8 +409,16 @@ try:
                 "sentiment": sentiment
             })
 
+            history.append({
+                "title": title,
+                "date": pub_date,
+                "district": district,
+                "link": link
+            })
+
     save_summary_cache(summary_cache)
     create_map(district_news)
+    save_history(history)
 
 except Exception as e:
     print("❌ 실행 오류:", e)
