@@ -132,6 +132,7 @@ def create_map(district_news):
                 <b>{a['title']}</b>
             </a><br>
             <small>{a['summary']}</small><br><br>
+            <small>감성: {a['sentiment']}</small><br><br>
             """
 
         if len(articles) > 5:
