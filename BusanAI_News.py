@@ -143,7 +143,7 @@ def create_map(district_news):
             <a href="{a['link']}" target="_blank">
                 <b>{a['title']}</b>
             </a><br>
-            <small>{sentiment_badge(a['sentiment'])}</small><br>
+            <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
             <small>{a['summary']}</small><br><br>            
             """
 
@@ -156,8 +156,8 @@ def create_map(district_news):
                 <a href="{a['link']}" target="_blank">
                     <b>{a['title']}</b>
                 </a><br>
-                <small>{sentiment_badge(a['sentiment'])}</small><br>
-                <small>{a['summary']}</small><br>                
+                <small>{a['pub_date']} · {sentiment_badge(a['sentiment'])}</small><br>
+                <small>{a['summary']}</small><br><br>                
                 """
 
             news_html += "</details>"
