@@ -146,6 +146,21 @@ def create_map(district_news):
             <small>{sentiment_badge(a['sentiment'])}</small><br><br>
             """
 
+        # 나머지 기사 숨김
+        if len(articles) > 5:
+            news_html += f"<details><summary>... 외 {len(articles)-5}건 더 보기</summary><br>"
+
+            for a in articles[5:]:
+                news_html += f"""
+                <a href="{a['link']}" target="_blank">
+                    <b>{a['title']}</b>
+                </a><br>
+                <small>{a['summary']}</small><br>
+                <small>{sentiment_badge(a['sentiment'])}</small><br><br>
+                """
+
+            news_html += "</details>"
+
         if len(articles) > 5:
             news_html += f"<b>... 외 {len(articles)-5}건 더</b>"
             if "Access blocked" in a["title"] or "Access blocked" in a["summary"]:
