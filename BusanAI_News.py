@@ -302,12 +302,12 @@ def create_map(district_news):
 
         folium.CircleMarker(
             location=[lat, lon],
-            radius= 18,
-            popup=folium.Popup(popup_text, max_width=300),
-            color="blue",
-            fill=True,
-            fill_color="blue",
-            fill_opacity=0.6
+            popup=folium.Popup(popup_text, max_width=350),
+            tooltip=d,   # 마우스 올리면 구 이름 표시
+            icon=folium.Icon(
+                color="blue",
+                icon="info-sign"
+            )
         ).add_to(m)
 
         folium.map.Marker(
