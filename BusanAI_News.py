@@ -255,6 +255,7 @@ def create_map(district_news):
                     """
 
                 similar_html += "</details>"
+                
             news_html += f"""
             <a href="{a['link']}" target="_blank">
                 <b>{a['title']}</b>
@@ -269,6 +270,20 @@ def create_map(district_news):
             news_html += f"<details><summary>... 외 {len(articles)-5}건 더 보기</summary><br>"
 
             for a in articles[5:]:
+                similar_html = ""
+
+                if a["similar"]:
+                    similar_html += "<details><summary>📚 과거 유사 기사</summary>"
+
+                    for old in a["similar"]:
+                        similar_html += f"""
+                        <small>
+                        {old['date']} - {old['title']}
+                        </small><br>
+                        """
+
+                    similar_html += "</details>"
+
                 news_html += f"""
                 <a href="{a['link']}" target="_blank">
                     <b>{a['title']}</b>
