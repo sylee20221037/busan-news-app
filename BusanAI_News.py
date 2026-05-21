@@ -254,7 +254,7 @@ def create_map(district_news):
                     </small><br>
                     """
 
-    similar_html += "</details>"
+                similar_html += "</details>"
             news_html += f"""
             <a href="{a['link']}" target="_blank">
                 <b>{a['title']}</b>
