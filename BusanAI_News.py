@@ -113,16 +113,7 @@ def format_pub_date(pub_date):
 
     return f"{dt.year}-{dt.month}-{dt.day} {dt.strftime('%H:%M')}, {weekday_kor}"
 
-# =========================
-# 🎨 뉴스 분류
-# =========================
-def classify(text):
-    if "사고" in text or "화재" in text:
-        return "red"
-    elif "개발" in text or "투자" in text:
-        return "green"
-    return "blue"
-    
+
 # =========================
 # 😊 감성 표시 변환
 # =========================
