@@ -2,15 +2,32 @@ import streamlit as st
 import subprocess
 import sys
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 st.title("부산 AI 뉴스맵")
 
 # 마지막 업데이트 시간 표시
 if os.path.exists("busan_news_map.html"):
     modified_time = os.path.getmtime("busan_news_map.html")
-    update_time = datetime.fromtimestamp(modified_time)
-    st.caption(f"마지막 업데이트: {update_time.strftime('%Y-%m-%d %H:%M')}")
+
+    # UTC → 한국시간(KST)
+    update_time = datetime.utcfromtimestamp(modified_time) + timedelta(hours=9)
+
+    weekday_map = {
+        "Monday": "월요일",
+        "Tuesday": "화요일",
+        "Wednesday": "수요일",
+        "Thursday": "목요일",
+        "Friday": "금요일",
+        "Saturday": "토요일",
+        "Sunday": "일요일"
+    }
+
+    weekday = weekday_map[update_time.strftime("%A")]
+
+    st.caption(
+        f"마지막 업데이트: {update_time.strftime('%Y-%m-%d %H:%M')}, {weekday}"
+    )
 
 # 뉴스 새로고침 버튼
 if st.button("뉴스 새로고침"):
