@@ -3,6 +3,7 @@ import folium
 from collections import defaultdict
 import urllib.parse
 import re
+from difflib import SequenceMatcher
 import os
 import webbrowser
 from openai import OpenAI
@@ -78,6 +79,15 @@ def find_district(text):
 # =========================
 def clean_text(text):
     return re.sub('<.*?>', '', text)
+
+# =========================c
+# =========================
+def is_duplicate(title, existing_titles):
+    for old_title in existing_titles:
+        similarity = SequenceMatcher(None, title, old_title).ratio()
+        if similarity > 0.75:   # 75% 이상 비슷하면 중복
+            return True
+    return False
 
 # =========================
 # 🧹 날짜 변환 함
@@ -283,12 +293,26 @@ try:
         district = find_district(text)
 
         if district:
+            # 이미 저장된 제목들 가져오기
+            existing_titles = [
+                a["title"] for a in district_news[district]
+            ]
+
+            # 중복 기사면 건너뛰기
+            if is_duplicate(title, existing_titles):
+                continue
+
+            # 요약 캐시
             if title in summary_cache:
                 summary = summary_cache[title]
             else:
                 summary = ai_summarize(title, desc)
                 summary_cache[title] = summary
+
+            # 감성 분석
             sentiment = ai_sentiment(title, desc)
+
+            # 저장
             district_news[district].append({
                 "title": title,
                 "desc": desc,
