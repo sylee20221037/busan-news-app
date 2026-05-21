@@ -112,6 +112,17 @@ def classify(text):
     elif "개발" in text or "투자" in text:
         return "green"
     return "blue"
+    
+# =========================
+# 😊 감성 표시 변환
+# =========================
+def sentiment_badge(sentiment):
+    if sentiment == "긍정":
+        return "🔵 긍정 논조"
+    elif sentiment == "부정":
+        return "🔴 부정 논조"
+    else:
+        return "⚪ 중립 논조"
 
 # =========================
 # 🗺️ 지도 생성
@@ -132,7 +143,7 @@ def create_map(district_news):
                 <b>{a['title']}</b>
             </a><br>
             <small>{a['summary']}</small><br><br>
-            <small>감성: {a['sentiment']}</small><br><br>
+            <small>{sentiment_badge(a['sentiment'])}</small><br><br>
             """
 
         if len(articles) > 5:
