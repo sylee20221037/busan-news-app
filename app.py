@@ -6,6 +6,12 @@ from datetime import datetime, timedelta
 
 st.title("부산 AI 뉴스맵")
 
+# 기사 검색창
+search_keyword = st.text_input(
+    "기사 검색",
+    placeholder="예: 부산항, 해운대, BISCO"
+)
+
 # 마지막 업데이트 시간 표시
 if os.path.exists("busan_news_map.html"):
     modified_time = os.path.getmtime("busan_news_map.html")
@@ -32,7 +38,11 @@ if os.path.exists("busan_news_map.html"):
 # 뉴스 새로고침 버튼
 if st.button("뉴스 새로고침"):
     with st.spinner("뉴스 생성 중... 잠시만 기다려주세요"):
-        subprocess.run([sys.executable, "BusanAI_News.py"])
+        subprocess.run([
+            sys.executable,
+            "BusanAI_News.py",
+            search_keyword if search_keyword else "부산"
+        ])
     st.success("지도 생성 완료!")
     st.rerun()
 
