@@ -11,6 +11,7 @@ from datetime import datetime
 import streamlit as st
 import json
 import base64
+import sys
 
 # =========================
 # 🔑 네이버 API 키
@@ -27,7 +28,12 @@ client = OpenAI(
 # 🧠 뉴스 가져오기
 # =========================
 def get_news():
-    query = urllib.parse.quote("부산")
+    keyword = "부산"
+
+    if len(sys.argv) > 1:
+        keyword = sys.argv[1]
+
+    query = urllib.parse.quote(keyword)
     url = f"https://openapi.naver.com/v1/search/news.json?query={query}&display=50"
 
     headers = {
