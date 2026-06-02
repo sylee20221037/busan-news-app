@@ -76,9 +76,21 @@ districts = {
 # 📍 구 찾기
 # =========================
 def find_district(text):
-    for d in districts:
-        if d in text:
-            return d
+
+    text = text.replace(" ", "")
+
+    if not any(x in text for x in [
+        "부산",
+        "부산시",
+        "부산광역시"
+    ]):
+        return None
+
+    for district, keywords in district_keywords.items():
+        for keyword in keywords:
+            if keyword in text:
+                return district
+
     return None
 
 # =========================
